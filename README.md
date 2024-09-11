@@ -1,5 +1,5 @@
 
-[!alt text](https://github.com/Dhanraj30/staking-platform/blob/main/ezgif.com-speed%20(2).gif)
+![alt text](https://github.com/Dhanraj30/staking-platform/blob/main/ezgif.com-speed%20(2).gif)
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
