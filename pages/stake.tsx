@@ -308,12 +308,29 @@ import { motion } from 'framer-motion'
 import { poolDb } from '../components/poolsdb'
 import { getPoolDetails, action, autoCompound } from '../components/config'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/Input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { ArrowUpDown, Coins, TrendingUp, Wallet, Loader } from 'lucide-react'
+import { ArrowUpDown, Coins, TrendingUp, Wallet } from 'lucide-react'
 
+
+interface PoolDetails {
+  apy: string;
+  userstaked: string;
+  reward: string;
+  totalstaked: string;
+  tokenaddr: string;
+}
+  // Add a global type declaration for ethereum
+  declare global {
+    interface Window {
+      ethereum?: {
+        //request: (options: { method: string }) => Promise<any>;
+        request: (options: { method: string; params?: unknown[] }) => Promise<unknown>;
+      };
+    }
+  }
 export default function Stake() {
-  const [poolArray, setPoolArray] = useState([])
+  const [poolArray, setPoolArray] = useState<PoolDetails[]>([])
   const [loadingState, setLoadingState] = useState(false)
   const [selectedPoolIndex, setSelectedPoolIndex] = useState<number | null>(null)
   const [isWalletConnected, setIsWalletConnected] = useState(false)
@@ -338,7 +355,7 @@ export default function Stake() {
       setLoadingState(true)
     }
   }, [poolArray])
-
+/*
   const checkIfWalletIsConnected = async () => {
     try {
       const { ethereum } = window as any
@@ -368,6 +385,36 @@ export default function Stake() {
       console.error("An error occurred while connecting the wallet:", error)
     }
   }
+*/
+
+
+const checkIfWalletIsConnected = async () => {
+  try {
+    if (window.ethereum) {
+      const accounts = await window.ethereum.request({ method: 'eth_accounts' }) as string[];
+      if (accounts.length > 0) {
+        setIsWalletConnected(true);
+        setWalletAddress(accounts[0]);
+      }
+    }
+  } catch (error) {
+    console.error("An error occurred while checking wallet connection:", error);
+  }
+}
+
+const connectWallet = async () => {
+  try {
+    if (!window.ethereum) {
+      alert("Please install MetaMask!");
+      return;
+    }
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }) as string[];
+    setIsWalletConnected(true);
+    setWalletAddress(accounts[0]);
+  } catch (error) {
+    console.error("An error occurred while connecting the wallet:", error);
+  }
+}
 
   const stakeTokens = async (i: number, tokenAddress: string) => {
     const amount = (document.getElementById(`amt${i}`) as HTMLInputElement).value
@@ -558,6 +605,11 @@ export default function Stake() {
                 )}
               </motion.div>
             ))}
+          </div>
+        )}
+        {resultMessage && (
+          <div className="text-center text-red-500 mt-4">
+            {resultMessage}
           </div>
         )}
       </div>

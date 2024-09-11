@@ -137,8 +137,8 @@ export const autoCompound = async (): Promise<boolean> => {
 };
 */
 import { ethers, Contract, Signer } from "ethers";
-import { createWalletClient, custom } from "viem";
-import { sepolia } from "viem/chains";
+//import { createWalletClient, custom } from "viem";
+//import { sepolia } from "viem/chains";
 import masterChefAbi from "./masterchef.json";
 import tokenAbi from "./erc20abi.json";
 
@@ -201,10 +201,19 @@ export const fetchTokenBalance = async (tokenaddress: string, userwallet: string
 };
 
 // Get pool details for all pools in the MasterChef contract
-export const getPoolDetails = async (): Promise<any[]> => {
+interface PoolDetails {
+  totalstaked: string;
+  apy: string;
+  userstaked: string;
+  reward: string;
+  multiplier: string;
+  userbalance: string;
+  tokenaddr: string;
+}
+export const getPoolDetails = async (): Promise<PoolDetails[]> => {
   const { account, masterchef } = await connectWallet();
   const poolLength = Number((await masterchef.poolLength()).toString());
-  const poolArray: any[] = [];
+  const poolArray: PoolDetails[] = [];
 
   for (let i = 0; i < poolLength; i++) {
     const poolInfo = await masterchef.poolInfo(i);

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from "next/link"
 import { motion } from 'framer-motion'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/Input"
 import { ArrowRight, ChevronRight, Lock, Zap, BarChart3 } from "lucide-react"
 
 export default function StakingLandingPage() {
